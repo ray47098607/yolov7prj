@@ -79,53 +79,54 @@ def checkpose(landmarks):#姿勢判斷式
         if landmarks[14].y<landmarks[12].y and landmarks[16].y<landmarks[14].y:
             if landmarks[13].y<landmarks[11].y and landmarks[15].y<landmarks[13].y:
                 if get_knee_angle(landmarks)[0] < 60 or get_knee_angle(landmarks)[1] < 60:
-                    poseaa="舉雙手+蹲"
+                    poseaa = "舉雙手+蹲"
                     print(get_knee_angle(landmarks)[0])
                 else:
-                    poseaa="舉雙手"
+                    poseaa = "舉雙手"
             else:
                 if get_knee_angle(landmarks)[0] < 60 or get_knee_angle(landmarks)[1] < 60:
-                    poseaa="舉右手+蹲"
+                    poseaa = "舉右手+蹲"
                     print(get_knee_angle(landmarks)[0])
                 else:
-                    poseaa="舉右手"
+                    poseaa = "舉右手"
         elif landmarks[13].y<landmarks[11].y and landmarks[15].y<landmarks[13].y:
             if get_knee_angle(landmarks)[0] < 60 or get_knee_angle(landmarks)[1] < 60:
-                    poseaa="舉左手+蹲"
+                    poseaa = "舉左手+蹲"
                     print(get_knee_angle(landmarks)[0])
             else:
-                poseaa="舉左手"
+                poseaa = "舉左手"
         elif get_knee_angle(landmarks)[0] < 60 or get_knee_angle(landmarks)[1] < 60:
-            poseaa="蹲"
+            poseaa = "蹲"
         else:
             poseaa = None  # 其他情況下重置姿勢為 None
-    return[poseaa]
+    return poseaa
 
 def poseSQL(poseaa):
     sql = f"INSERT INTO `pose`( `LhandU`, `RhandU`, `squat` ) VALUES ( "
     #sql += 
-    if poseaa is "舉雙手+蹲":
-        sql +="1,1,1"
-    elif poseaa is "舉雙手":
-        sql +="1,1,0"
-    elif poseaa is "舉右手+蹲":
-        sql +="0,1,1"
-    elif poseaa is "舉右手":
-        sql +="0,1,0"
-    elif poseaa is "舉左手+蹲":
-        sql +="1,0,1"
-    elif poseaa is "舉左手":
-        sql +="1,0,0"
-    elif poseaa is "蹲":
-        sql +="0,0,1"
-    elif poseaa is "None":
-        sql +="0,0,0"
+
+    if poseaa == "舉雙手+蹲":
+        sql += " 1,1,1 "
+    elif poseaa == "舉雙手":
+        sql += " 1,1,0 "
+    elif poseaa == "舉右手+蹲":
+        sql += "0,1,1"
+    elif poseaa == "舉右手":
+        sql += "0,1,0"
+    elif poseaa == "舉左手+蹲":
+        sql += "1,0,1"
+    elif poseaa == "舉左手":
+        sql += "1,0,0"
+    elif poseaa == "蹲":
+        sql += "0,0,1"
+    elif poseaa == "None":
+        sql += "0,0,0"
     else: 
-        sql +="0,0,0"
+        sql += "0,0,0"
         print("nopose")
 
     sql += ")"
-    return[sql]
+    return sql
 
 i=0
 # 啟用姿勢偵測
@@ -153,7 +154,7 @@ with mp_pose.Pose(
 
         cv2.imshow('oxxostudio', img)
 
-        id=1
+        id = 1
         i += 1
         if i == 20:
             i = 0
@@ -163,7 +164,10 @@ with mp_pose.Pose(
                 # 繼續執行接下來的程式碼
                 
                 sql = poseSQL(checkpose(landmarks))
-                id=+1
+                
+                print(sql)
+                
+                id += 1
                 try:
                 # 执行SQL语句
                     cursor.execute(sql)
