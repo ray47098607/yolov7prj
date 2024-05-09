@@ -84,16 +84,48 @@ def checkpose(landmarks):#姿勢判斷式
                 else:
                     poseaa="舉雙手"
             else:
-                poseaa="舉右手"
+                if get_knee_angle(landmarks)[0] < 60 or get_knee_angle(landmarks)[1] < 60:
+                    poseaa="舉右手+蹲"
+                    print(get_knee_angle(landmarks)[0])
+                else:
+                    poseaa="舉右手"
         elif landmarks[13].y<landmarks[11].y and landmarks[15].y<landmarks[13].y:
-            poseaa="舉左手"
+            if get_knee_angle(landmarks)[0] < 60 or get_knee_angle(landmarks)[1] < 60:
+                    poseaa="舉左手+蹲"
+                    print(get_knee_angle(landmarks)[0])
+            else:
+                poseaa="舉左手"
         elif get_knee_angle(landmarks)[0] < 60 or get_knee_angle(landmarks)[1] < 60:
             poseaa="蹲"
         else:
             poseaa = None  # 其他情況下重置姿勢為 None
     return[poseaa]
 
+def poseSQL(poseaa):
+    sql = f"INSERT INTO `pose`( `LhandU`, `RhandU`, `squat` ) VALUES ( "
+    #sql += 
+    if poseaa is "舉雙手+蹲":
+        sql +="1,1,1"
+    elif poseaa is "舉雙手":
+        sql +="1,1,0"
+    elif poseaa is "舉右手+蹲":
+        sql +="0,1,1"
+    elif poseaa is "舉右手":
+        sql +="0,1,0"
+    elif poseaa is "舉左手+蹲":
+        sql +="1,0,1"
+    elif poseaa is "舉左手":
+        sql +="1,0,0"
+    elif poseaa is "蹲":
+        sql +="0,0,1"
+    elif poseaa is "None":
+        sql +="0,0,0"
+    else: 
+        sql +="0,0,0"
+        print("nopose")
 
+    sql += ")"
+    return[sql]
 
 i=0
 # 啟用姿勢偵測
@@ -129,14 +161,9 @@ with mp_pose.Pose(
             if results.pose_landmarks is not None:
                 landmarks = results.pose_landmarks.landmark
                 # 繼續執行接下來的程式碼
-                    
-                sql = f"INSERT INTO `yolo`( `time`, `a0nose`, `a1lefteye(inner)`, `a2lefteye`, `a3lefteye(outer)`, `a4righteye(inner)`, `a5righteye`, `a6righteye(outer)`, `a7leftear`, `a8rightear`, `a9mouth(left)`, `a10mouth(right)`, `a11leftshoulder`, `a12rightshoulder`, `a13leftelbow`, `a14rightelbow`, `a15leftwrist`, `a16rightwrist`, `a17leftpinky`, `a18rightpinky`, `a19leftindex`, `a20rightindex`, `a21leftthumb`, `a22rightthumb`, `a23lefthip`, `a24righthip`, `a25leftknee`, `a26rightknee`, `a27leftankle`, `a28rightankle`, `a29leftheel`, `a30rightheel`, `a31leftfootindex`, `a32rightfootindex`) VALUES ( current_timestamp(),"
-                for lm in landmarks:
-                    sql += f"'x: {lm.x} y: {lm.y} z: {lm.z} visibility: {lm.visibility}',"
-                sql = sql[:-1]  # 去掉最後的逗號
-                sql += ")"
-                #print(sql)
-                id += 1
+                
+                sql = poseSQL(checkpose(landmarks))
+                id=+1
                 try:
                 # 执行SQL语句
                     cursor.execute(sql)
