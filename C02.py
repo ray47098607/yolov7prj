@@ -72,38 +72,34 @@ def headdegree(landmarks):#12right_shoulder-11left_shoulder 8right_ear-7left_ear
 
 
 def checkpose(landmarks):#姿勢判斷式
-    #搬
+    
+    #動作
     
     if landmarks is None:
         poseaa = None 
     else:
-        #第一區
-        if landmarks[14].y<landmarks[12].y and landmarks[16].y<landmarks[14].y:
-            if landmarks[13].y<landmarks[11].y and landmarks[15].y<landmarks[13].y:
-                if get_knee_angle(landmarks)[0] < 60 or get_knee_angle(landmarks)[1] < 60:
-                    poseaa = "舉雙手+蹲"
-                    print(get_knee_angle(landmarks)[0])
-                else:
-                    poseaa = "舉雙手"
-            else:
-                if get_knee_angle(landmarks)[0] < 60 or get_knee_angle(landmarks)[1] < 60:
-                    poseaa = "舉右手+蹲"
-                    print(get_knee_angle(landmarks)[0])
-                else:
-                    poseaa = "舉右手"
-        elif landmarks[13].y<landmarks[11].y and landmarks[15].y<landmarks[13].y:
-            if get_knee_angle(landmarks)[0] < 60 or get_knee_angle(landmarks)[1] < 60:
-                    poseaa = "舉左手+蹲"
-                    print(get_knee_angle(landmarks)[0])
-            else:
-                poseaa = "舉左手"
-        elif get_knee_angle(landmarks)[0] < 60 or get_knee_angle(landmarks)[1] < 60:
-            poseaa = "蹲"
+        #
+        poseaa=""
+        if landmarks[14].y<landmarks[12].y and landmarks[16].y<landmarks[14].y and landmarks[13].y<landmarks[11].y and landmarks[15].y<landmarks[13].y:
+                poseaa = "舉雙手"
         else:
-            poseaa = None  # 其他情況下重置姿勢為 None
-        ####
+            if landmarks[14].y<landmarks[12].y and landmarks[16].y<landmarks[14].y:
+                poseaa = "舉右手"
+            if landmarks[13].y<landmarks[11].y and landmarks[15].y<landmarks[13].y:
+                poseaa = "舉左手"
+        #腳
+        if get_knee_angle(landmarks)[0] < 60 or get_knee_angle(landmarks)[1] < 60:
+            poseaa += "+蹲"
         
-    
+         
+        ####
+
+    #整理
+    if poseaa == "":
+        poseaa = None  # 其他情況下重置姿勢為 None
+    if poseaa == "+蹲":
+        poseaa = "蹲"
+
     return poseaa
 
 def poseSQL(poseaa):
@@ -137,7 +133,9 @@ def poseSQL(poseaa):
     sql += ")"
     return sql
 
-i=0
+#MAIN
+id = 0
+i = 0
 # 啟用姿勢偵測
 with mp_pose.Pose(
     min_detection_confidence=0.5,
@@ -163,13 +161,14 @@ with mp_pose.Pose(
 
         cv2.imshow('oxxostudio', img)
 
-        id = 1
+        
         i += 1
         if i == 20:
             i = 0
             # 在執行之前檢查是否有姿勢偵測結果
             if results.pose_landmarks is not None:
-                landmarksaa = landmarks
+                if id != 0:
+                    landmarksaa = landmarks
                 landmarks = results.pose_landmarks.landmark
 
                 # 繼續執行接下來的程式碼
