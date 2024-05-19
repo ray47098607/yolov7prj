@@ -78,7 +78,7 @@ def checkpose(landmarks):#姿勢判斷式
     if landmarks is None:
         poseaa = None 
     else:
-        #
+        #手
         poseaa=""
         if landmarks[14].y<landmarks[12].y and landmarks[16].y<landmarks[14].y and landmarks[13].y<landmarks[11].y and landmarks[15].y<landmarks[13].y:
                 poseaa = "舉雙手"
