@@ -133,7 +133,8 @@ def checkpose(landmarks):#姿勢判斷式
         if get_knee_angle(landmarks)[0] > 120 and get_knee_angle(landmarks)[0] > 120 :
             poseaa += "+站"
         
-        if 
+        if bodyangle(landmarks)[0] < 45 and bodyangle(landmarks)[1] < 45:
+            poseaa += "+彎腰"
         ####
 
     #整理
@@ -141,24 +142,36 @@ def checkpose(landmarks):#姿勢判斷式
         poseaa = None  # 其他情況下重置姿勢為 None
     if poseaa == "+蹲":
         poseaa = "蹲"
+    if poseaa == "+彎腰":
+        poseaa = "彎腰"
 
     return poseaa
 
 def poseSQL(poseaa):
 
-    sql = f"INSERT INTO `pose`( `LhandU`, `RhandU`, `squat` ) VALUES ( "
-    #sql += 
+    sql = f"INSERT INTO `pose`( `LhandU`, `RhandU`, `squat`, `stoop` ) VALUES ( "
+    #sql += +彎腰
 
     if poseaa == "舉雙手+蹲":
-        sql += "1,1,1"
+        sql += "1,1,1,0"
+    elif poseaa == "舉雙手+蹲+彎腰":
+        sql += "1,1,1,1"
     elif poseaa == "舉雙手":
-        sql += "1,1,0"
+        sql += "1,1,0,0"
+    elif poseaa == "舉雙手+彎腰":
+        sql += "1,1,0,1"
     elif poseaa == "舉右手+蹲":
-        sql += "0,1,1"
+        sql += "0,1,1,0"
+    elif poseaa == "舉右手+蹲+彎腰":
+        sql += "0,1,1,1"
     elif poseaa == "舉右手":
-        sql += "0,1,0"
+        sql += "0,1,0,0"
+    elif poseaa == "舉右手+彎腰":
+        sql += "0,1,0,1"
     elif poseaa == "舉左手+蹲":
-        sql += "1,0,1"
+        sql += "1,0,1,0"
+    elif poseaa == "舉左手+蹲+彎腰":
+        sql += "1,0,1,1"
     elif poseaa == "舉左手":
         sql += "1,0,0"
     elif poseaa == "蹲":
