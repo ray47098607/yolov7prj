@@ -102,8 +102,8 @@ def bodyangle(landmarks):#L 11-23,31-29 / R 12-24,32-30 判定彎腰
     r_foot_index = get_landmark(landmarks,32) 
     l_foot_index = get_landmark(landmarks,22) 
 
-    r_angle = calc_angles(r_shoulder,r_hip,r_foot_index,r_heel)
-    l_angle = calc_angles(l_shoulder, l_hip,l_foot_index, l_heel)
+    r_angle = calc_angles2(r_shoulder,r_hip,r_foot_index,r_heel)
+    l_angle = calc_angles2(l_shoulder, l_hip,l_foot_index, l_heel)
    
     return [r_angle, l_angle]
 
@@ -133,7 +133,7 @@ def checkpose(landmarks):#姿勢判斷式
         if get_knee_angle(landmarks)[0] > 120 and get_knee_angle(landmarks)[0] > 120 :
             poseaa += "+站"
         
-        if bodyangle(landmarks)[0] < 45 and bodyangle(landmarks)[1] < 45:
+        if bodyangle(landmarks)[0] < 60 or bodyangle(landmarks)[1] < 60 :
             poseaa += "+彎腰"
         ####
 
@@ -142,40 +142,88 @@ def checkpose(landmarks):#姿勢判斷式
         poseaa = None  # 其他情況下重置姿勢為 None
     if poseaa == "+蹲":
         poseaa = "蹲"
+    if poseaa == "+站":
+        poseaa = "站"
     if poseaa == "+彎腰":
         poseaa = "彎腰"
+    if poseaa == "+站+彎腰":
+        poseaa = "站+彎腰"
 
     return poseaa
 
 def poseSQL(poseaa):
 
-    sql = f"INSERT INTO `pose`( `LhandU`, `RhandU`, `squat`, `stoop` ) VALUES ( "
+    sql = f"INSERT INTO `pose`( `LhandU`, `RhandU`, `squat`, `stand`, `stoop` ) VALUES ( "
     #sql += +彎腰
 
-    if poseaa == "舉雙手+蹲":
-        sql += "1,1,1,0"
+    if poseaa == "舉雙手+蹲+站+彎腰":
+        sql += "1,1,1,1,1"
+    elif poseaa == "舉雙手+蹲+站":
+        sql += "1,1,1,1,0"
     elif poseaa == "舉雙手+蹲+彎腰":
-        sql += "1,1,1,1"
-    elif poseaa == "舉雙手":
-        sql += "1,1,0,0"
+        sql += "1,1,1,0,1"
+    elif poseaa == "舉雙手+蹲":
+        sql += "1,1,1,0,0"
+    elif poseaa == "舉雙手+站+彎腰":
+        sql += "1,1,0,1,1"
+    elif poseaa == "舉雙手+站":
+        sql += "1,1,0,1,0"
     elif poseaa == "舉雙手+彎腰":
-        sql += "1,1,0,1"
-    elif poseaa == "舉右手+蹲":
-        sql += "0,1,1,0"
-    elif poseaa == "舉右手+蹲+彎腰":
-        sql += "0,1,1,1"
-    elif poseaa == "舉右手":
-        sql += "0,1,0,0"
-    elif poseaa == "舉右手+彎腰":
-        sql += "0,1,0,1"
-    elif poseaa == "舉左手+蹲":
-        sql += "1,0,1,0"
+        sql += "1,1,0,0,1"
+    elif poseaa == "舉雙手":
+        sql += "1,1,0,0,0"
+
+    elif poseaa == "舉左手+蹲+站+彎腰":
+        sql += "1,0,1,1,1"
+    elif poseaa == "舉左手+蹲+站":
+        sql += "1,0,1,1,0"
     elif poseaa == "舉左手+蹲+彎腰":
-        sql += "1,0,1,1"
+        sql += "1,0,1,0,1"
+    elif poseaa == "舉左手+蹲":
+        sql += "1,0,1,0,0"
+    elif poseaa == "舉左手+站+彎腰":
+        sql += "1,0,0,1,1"
+    elif poseaa == "舉左手+站":
+        sql += "1,0,0,1,0"
+    elif poseaa == "舉左手+彎腰":
+        sql += "1,0,0,0,1"
     elif poseaa == "舉左手":
-        sql += "1,0,0"
+        sql += "1,0,0,0,0"
+
+
+    elif poseaa == "舉右手+蹲+站+彎腰":
+        sql += "0,1,1,1,1"
+    elif poseaa == "舉右手+蹲+站":
+        sql += "0,1,1,1,0"
+    elif poseaa == "舉右手+蹲+彎腰":
+        sql += "0,1,1,0,1"
+    elif poseaa == "舉右手+蹲":
+        sql += "0,1,1,0,0"
+    elif poseaa == "舉右手+站+彎腰":
+        sql += "0,1,0,1,1"
+    elif poseaa == "舉右手+站":
+        sql += "0,1,0,1,0"
+    elif poseaa == "舉右手+彎腰":
+        sql += "0,1,0,0,1"
+    elif poseaa == "舉右手":
+        sql += "0,1,0,0,0"
+    
+    elif poseaa == "蹲+站+彎腰":
+        sql += "0,0,1,1,1"
+    elif poseaa == "蹲+站":
+        sql += "0,0,1,1,0"
+    elif poseaa == "蹲+彎腰":
+        sql += "0,0,1,0,1"
     elif poseaa == "蹲":
-        sql += "0,0,1"
+        sql += "0,0,1,0,0"
+    elif poseaa == "站+彎腰":
+        sql += "0,0,0,1,1"
+    elif poseaa == "站":
+        sql += "0,0,0,1,0"
+    elif poseaa == "彎腰":
+        sql += "0,0,0,0,1"
+    elif poseaa == "":
+        sql += "0,0,0,0,0"
     elif poseaa == "None":
         sql += "0,0,0"
     else: 
@@ -230,7 +278,7 @@ with mp_pose.Pose(
                 
                 sql = poseSQL(checkpose(landmarks))
                 
-                print(sql)
+                ##print(sql)
                 
                 id += 1
                 try:
