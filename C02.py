@@ -84,7 +84,7 @@ def checkpose(landmarks):#姿勢判斷式
     if landmarks is None:
         poseaa = None 
     else:
-        #
+        #手
         poseaa=""
         if landmarks[14].y<landmarks[12].y and landmarks[16].y<landmarks[14].y and landmarks[13].y<landmarks[11].y and landmarks[15].y<landmarks[13].y:
                 poseaa = "舉雙手"
@@ -175,8 +175,8 @@ with mp_pose.Pose(
             if results.pose_landmarks is not None:
                 if id != 0:
                     landmarksaa = landmarks
-                landmarks = landmarkbb(results.pose_landmarks.landmark)
-
+                landmarks = results.pose_landmarks.landmark
+                print(landmarks[0])
                 # 繼續執行接下來的程式碼
                 
                 sql = poseSQL(checkpose(landmarks))
