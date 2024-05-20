@@ -59,6 +59,21 @@ def calc_angles(a, b, c):
 
     return angle
 
+def calc_angles2(a, b, c,d):
+    a = np.array(a)
+    b = np.array(b)
+    c = np.array(c)
+    d = np.array(d)
+
+    radians = np.arctan2(c[1] - d[1], c[0] - d[0]) - np.arctan2(a[1] - b[1], a[0] - b[0])
+
+    angle = np.abs(radians * 180.0 / np.pi)
+
+    if angle > 180:
+        angle = 360 - angle
+
+    return angle
+
 def get_landmark(landmarks, part_index):
     return [
         landmarks[part_index].x,
@@ -73,7 +88,24 @@ def headdegree(landmarks):#12right_shoulder-11left_shoulder 8right_ear-7left_ear
     r_ear = get_landmark(landmarks,8)
     l_ear = get_landmark(landmarks,7)
 
-def bodydegree(landmarks):#L 11-23,31-29 / R 12-24,32-30 判定彎腰
+
+def bodyangle(landmarks):#L 11-23,31-29 / R 12-24,32-30 判定彎腰
+    r_shoulder = get_landmark(landmarks,12)
+    l_shoulder = get_landmark(landmarks,11)
+
+    r_hip = get_landmark(landmarks,24) #"RIGHT_HIP"
+    l_hip = get_landmark(landmarks,23) #"LEFT_HIP"
+    
+    r_heel = get_landmark(landmarks,30) 
+    l_heel = get_landmark(landmarks,29) 
+
+    r_foot_index = get_landmark(landmarks,32) 
+    l_foot_index = get_landmark(landmarks,22) 
+
+    r_angle = calc_angles(r_shoulder,r_hip,r_foot_index,r_heel)
+    l_angle = calc_angles(l_shoulder, l_hip,l_foot_index, l_heel)
+   
+    return [r_angle, l_angle]
 
     
 
