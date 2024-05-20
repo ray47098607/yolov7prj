@@ -23,10 +23,10 @@ cursor = db.cursor()
 
 
 ###sub
-def landmarkbb(landmark): ##以鼻子為座標原點
+def landmarkbb(landmark): ##以鼻子為座標原點 
     landmarkcc=landmark
     for i in range(33):
-        landmarkcc[i] = get_landmark[i] - get_landmark[0]
+        landmarkcc[i] = get_landmark(landmarks,i) - get_landmark(landmarks,0)
 
     return [landmarkcc]
 
@@ -73,6 +73,7 @@ def headdegree(landmarks):#12right_shoulder-11left_shoulder 8right_ear-7left_ear
     r_ear = get_landmark(landmarks,8)
     l_ear = get_landmark(landmarks,7)
 
+def bodydegree(landmarks):#L 11-23,31-29 / R 12-24,32-30 判定彎腰
 
     
 
@@ -93,11 +94,14 @@ def checkpose(landmarks):#姿勢判斷式
                 poseaa = "舉右手"
             if landmarks[13].y<landmarks[11].y and landmarks[15].y<landmarks[13].y:
                 poseaa = "舉左手"
-        #腳
+        #
         if get_knee_angle(landmarks)[0] < 60 or get_knee_angle(landmarks)[1] < 60:
             poseaa += "+蹲"
         
-         
+        if get_knee_angle(landmarks)[0] > 120 and get_knee_angle(landmarks)[0] > 120 :
+            poseaa += "+站"
+        
+        if 
         ####
 
     #整理
@@ -112,11 +116,11 @@ def poseSQL(poseaa):
 
     sql = f"INSERT INTO `pose`( `LhandU`, `RhandU`, `squat` ) VALUES ( "
     #sql += 
-#第一區
+
     if poseaa == "舉雙手+蹲":
-        sql += " 1,1,1 "
+        sql += "1,1,1"
     elif poseaa == "舉雙手":
-        sql += " 1,1,0 "
+        sql += "1,1,0"
     elif poseaa == "舉右手+蹲":
         sql += "0,1,1"
     elif poseaa == "舉右手":
