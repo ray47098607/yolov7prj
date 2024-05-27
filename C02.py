@@ -225,9 +225,9 @@ def poseSQL(poseaa):
     elif poseaa == "":
         sql += "0,0,0,0,0"
     elif poseaa == "None":
-        sql += "0,0,0"
+        sql += "0,0,0,0,0"
     else: 
-        sql += "0,0,0"
+        sql += "0,0,0,0,0"
         print("nopose")
 #
 
