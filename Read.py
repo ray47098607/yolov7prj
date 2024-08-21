@@ -31,7 +31,7 @@ def calc_angles(a, b, c):#三點角度
     return angle
 
 file = open('store01_data.csv',mode='w', newline='')
-writer = csv.writer(file)
+writer = csv.Dictwriter(file,['time','nose0'])
 # 啟用姿勢偵測
 i=0
 with mp_pose.Pose(
