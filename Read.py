@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+import csv
 
 mp_drawing = mp.solutions.drawing_utils          # mediapipe 繪圖方法
 mp_drawing_styles = mp.solutions.drawing_styles  # mediapipe 繪圖樣式
@@ -29,8 +30,10 @@ def calc_angles(a, b, c):#三點角度
 
     return angle
 
-
+file = open('store01_data.csv',mode='w', newline='')
+writer = csv.writer(file)
 # 啟用姿勢偵測
+i=0
 with mp_pose.Pose(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as pose:
@@ -64,14 +67,18 @@ with mp_pose.Pose(
             landmarks = None  # 設定為 None，以避免後續程式碼因為訪問 None 而引發錯誤
 
         print(checkpose(landmarks))#姿勢判定
-        txt = f""
+        
+        txt = i 
+        txt = landmarks
         print(txt)
+        writer.writerow(txt)
+        i=i+1
         #########################
 
         if cv2.waitKey(5) == ord('q'):
             break     # 按下 q 鍵停止
 cap.release()
 cv2.destroyAllWindows()
-
+file.close()
 
 
