@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8" />
+<meta lang="zh-tw" style="font-size: 24px;font-family: Roboto, Arial, sans-serif;">
+
+<head>
+    <title>BM2OHE AI UI</title>
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+        crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/gh/pdis/design-system/dist/css/pdis-design-system.css" rel="stylesheet">
+
+    <!--觀自在菩薩，行深般若波羅蜜多時，照見五蘊皆空，度一切苦厄。舍利子，色不異空，空不異色；色即是空，空即是色。受、想、行、識，亦復如是。舍利子，是諸法空相，不生不滅，不垢不淨，不增不減，是故空中無色，無受、想、行、識；無眼、耳、鼻、舌、身、意；無色、聲、香、味、觸、法；無眼界，乃至無意識界；無無明，亦無無明盡；乃至無老死，亦無老死盡。無苦、集、滅、道，無智亦無得。以無所得故，菩提薩埵，依般若波羅蜜多故，心無罣礙。無罣礙故，無有恐怖，遠離顛倒夢想，究竟涅槃。三世諸佛，依般若波羅蜜多故，得阿耨多羅三藐三菩提。故知般若波羅蜜多，是大神咒，是大明咒，是無上咒，是無等等咒，能除一切苦，真實不虛。故說般若波羅蜜多咒，即說咒曰：「揭諦、揭諦，波羅揭諦，波羅僧揭諦，菩提薩婆訶。」-->
+</head>
+
+<body>
+    <header>
+        <div class="row" style="background-color:#39C5BB; height: 3cm ; width: auto;  ">
+            <div class="col-md-4">--</div>
+            <div class="col-md-6">
+                <h1> 影像偵測系統 </h1>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <nav class="container">
+            <h5>進出貨系統</h5>
+            現在時間:<span id="now-datetime">N/A</span>
+            <br /> 
+        </nav>
+    </header>
+
+    <hr>
+    <div class="container">
+        <div class="row">
+            <aside class="col-md-4 col-lg-6">
+                <div class="01" style="background-color: #9cd6c5;">
+                    日期: <span id="last-event-date">N/A</span>        
+                    時間:<span id="last-event-time">N/A</span> 
+                </div>
+            </aside>
+            <main class="col-md-4 col-lg-6  ">
+                <div>
+                    事件:<span id="last-event-name">N/A</span> 
+                </div>
+            </main>
+
+        </div>
+        <div class="row2">
+            <div>
+                <img src="./P1.jpg" width="300">
+                <img src="./P2.jpg" width="300">
+                <img src="./P3.jpg" width="300">
+            </div>
+
+        </div>
+    </div>
+    <script>
+        // 取得當前時間
+        function getCurrentDateTime() {
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = (now.getMonth() + 1).toString().padStart(2, '0');
+          const day = now.getDate().toString().padStart(2, '0');
+          const hours = now.getHours().toString().padStart(2, '0');
+          const minutes = now.getMinutes().toString().padStart(2, '0');
+          const seconds = now.getSeconds().toString().padStart(2, '0');
+      
+          return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+      
+        // 更新顯示當前時間的元素
+        function updateCurrentDateTime() {
+          const nowDatetimeElement = document.getElementById('now-datetime');
+          if (nowDatetimeElement) {
+            nowDatetimeElement.textContent = getCurrentDateTime();
+          }
+        }
+
+        // 初始設定
+        updateCurrentDateTime();
+      
+        // 每秒更新一次時間
+        setInterval(updateCurrentDateTime, 1000);
+
+        //更新資料
+        
+
+
+      </script>
+</body>
+
+<footer style="background-color: rgb(100, 100, 156);">Footer<br/>
+    <a href="./index.html">事件</a><br/>
+    <a href="./io.html">進出貨</a>
+
+    
+</footer>
+
+<style>
+    .bd-example>.container>div>main {
+        height: 200px;
+        padding: 0.5rem;
+        background-color: #c5c539;
+        border: 0.2rem solid #c5c539;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .bd-example>.container>div>aside1 {
+        height: 200px;
+        padding: 0.5rem;
+        background-color: #a239c5;
+        border: 0.2rem solid #a239c5;
+        text-align: center;
+        box-sizing: border-box;
+    }
+</style>
+
+<meta http-equiv="refresh" content="20" />
+
+
+</html>
